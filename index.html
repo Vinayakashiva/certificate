@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GSAP Certificate Portal</title>
-
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Google Sans (using Poppins/Inter as fallback) -->
+    <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
+    
     <script>
         tailwind.config = {
             theme: {
@@ -42,7 +42,7 @@
             }
         }
     </script>
-
+    
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -53,31 +53,16 @@
         .google-shadow {
             box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
         }
-
+        
         .google-shadow-hover:hover {
             box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
             transform: translateY(-2px);
         }
 
-        /* Modal Animation */
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .modal-exit { opacity: 1; transform: scale(1); }
-        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
-
-        /* Shimmer loading */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col relative">
@@ -85,7 +70,6 @@
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-4 right-4 z-[200] flex flex-col gap-2"></div>
 
-    <!-- Navigation -->
     <nav class="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -95,22 +79,12 @@
                     </div>
                     <span class="font-medium text-lg tracking-tight text-gray-800">Student Ambassador Program</span>
                 </div>
-
-                <div class="flex items-center gap-4">
-                    <button id="nav-home-btn" class="hidden text-sm font-medium text-google-blue hover:underline">Back to Portal</button>
-                    <!-- Admin Button -->
-                    <button id="admin-login-btn" class="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm font-medium text-gray-600">
-                        <i class="ph ph-shield-check text-lg"></i>
-                        <span id="admin-btn-text">Admin Login</span>
-                    </button>
-                </div>
             </div>
         </div>
     </nav>
 
-    <!-- ================= PUBLIC VIEW ================= -->
     <main id="public-view" class="flex-grow">
-
+        
         <!-- Hero Section -->
         <header class="bg-white border-b border-gray-200 pb-16 pt-12 text-center">
             <div class="max-w-4xl mx-auto px-4">
@@ -125,37 +99,33 @@
                         Participant Certificate Portal
                     </h1>
                     <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                        Thank you for participating in events hosted by your local Google Student Ambassador. Verify and download your certificates below.
+                        Thank you for participating in our recent events! Verify your name and download your official certificate below.
                     </p>
-
+                    
                     <!-- Search Bar -->
                     <div class="relative max-w-xl mx-auto google-shadow rounded-full overflow-hidden bg-white flex items-center p-1 focus-within:ring-2 focus-within:ring-google-blue transition-all">
                         <i class="ph ph-magnifying-glass text-gray-400 text-xl pl-4"></i>
-                        <input type="text" id="public-search" class="w-full px-4 py-3 outline-none text-gray-700 bg-transparent" placeholder="Search by your name...">
-                        <button class="px-6 py-2 bg-google-blue hover:bg-blue-600 text-white rounded-full font-medium transition-colors">Search</button>
+                        <input type="text" id="public-search" class="w-full px-4 py-3 outline-none text-gray-700 bg-transparent" placeholder="Search for your name...">
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Top Participants -->
+        <!-- Top Participants Section -->
         <section class="py-16 bg-google-gray">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-2xl font-bold text-google-text mb-2 flex items-center gap-2">
                     <i class="ph-fill ph-star text-google-yellow"></i> Top Participants
                 </h2>
-                <p class="text-gray-600 mb-8">Special recognition for outstanding performance and engagement in our events.</p>
-
+                <p class="text-gray-600 mb-8">Special recognition for outstanding performance and engagement.</p>
+                
                 <div id="public-top-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Loading Skeletons -->
-                    <div class="h-64 rounded-xl skeleton google-shadow"></div>
-                    <div class="h-64 rounded-xl skeleton google-shadow"></div>
-                    <div class="h-64 rounded-xl skeleton google-shadow"></div>
+                    <!-- Populated by JS -->
                 </div>
             </div>
         </section>
 
-        <!-- General Participants -->
+        <!-- General Participants Section -->
         <section class="py-16 bg-white border-t border-gray-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -163,104 +133,17 @@
                         <h2 class="text-2xl font-bold text-google-text flex items-center gap-2">
                             <i class="ph-fill ph-users text-google-blue"></i> Event Participants
                         </h2>
-                        <p class="text-gray-600 mt-1">Certificates of successful participation in our events.</p>
-                    </div>
-                    <div class="relative">
-                        <i class="ph ph-calendar text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"></i>
-                        <input type="text" id="public-track-filter" placeholder="Filter by event..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-google-blue outline-none text-gray-700 w-full md:w-64">
+                        <p class="text-gray-600 mt-1">Certificates of successful participation.</p>
                     </div>
                 </div>
 
                 <div id="public-gen-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Loading Skeletons -->
-                    <div class="h-40 rounded-xl skeleton border border-gray-200"></div>
-                    <div class="h-40 rounded-xl skeleton border border-gray-200"></div>
-                    <div class="h-40 rounded-xl skeleton border border-gray-200"></div>
-                    <div class="h-40 rounded-xl skeleton border border-gray-200"></div>
+                    <!-- Populated by JS -->
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- ================= ADMIN DASHBOARD (HIDDEN) ================= -->
-    <main id="admin-view" class="hidden flex-grow bg-gray-50 flex flex-col md:flex-row">
-        <!-- Sidebar -->
-        <aside class="w-full md:w-64 bg-white border-r border-gray-200 p-6 flex flex-col gap-2">
-            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Manage Data</h3>
-            <button onclick="switchAdminTab('top')" id="tab-btn-top" class="w-full text-left px-4 py-3 rounded-md font-medium text-google-blue bg-blue-50 transition-colors flex items-center gap-3">
-                <i class="ph-fill ph-star"></i> Top Participants
-            </button>
-            <button onclick="switchAdminTab('general')" id="tab-btn-general" class="w-full text-left px-4 py-3 rounded-md font-medium text-gray-600 hover:bg-gray-100 transition-colors flex items-center gap-3">
-                <i class="ph-fill ph-users"></i> All Participants
-            </button>
-        </aside>
-
-        <!-- Dashboard Content -->
-        <div class="flex-grow p-6 md:p-10 max-h-screen overflow-y-auto">
-            <div class="max-w-5xl mx-auto">
-
-                <!-- OFFLINE MODE BANNER -->
-                <div class="bg-blue-50 border-l-4 border-google-blue p-4 mb-8 rounded-r-md shadow-sm">
-                    <div class="flex">
-                        <div class="flex-shrink-0 pt-0.5">
-                            <i class="ph-fill ph-info text-google-blue text-xl"></i>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-bold text-blue-800">Local Offline Mode Active</h3>
-                            <p class="text-sm text-blue-700 mt-1">
-                                You are running this portal without a database. Before you close this page, be sure to click <strong>Export Data</strong> to save your participants to a file. You can restore them anytime using <strong>Import Data</strong>.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <h2 id="admin-page-title" class="text-3xl font-bold text-gray-800">Top Participants</h2>
-
-                    <div class="flex flex-wrap items-center gap-3">
-                        <!-- Import/Export Buttons -->
-                        <div class="flex items-center bg-white rounded-md border border-gray-300 overflow-hidden shadow-sm mr-2">
-                            <label class="px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium text-sm border-r border-gray-300 cursor-pointer flex items-center gap-2 transition-colors">
-                                <i class="ph-bold ph-upload-simple text-lg"></i> Import
-                                <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
-                            </label>
-                            <button onclick="exportData()" class="px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium text-sm flex items-center gap-2 transition-colors">
-                                <i class="ph-bold ph-download-simple text-lg"></i> Export
-                            </button>
-                        </div>
-
-                        <button onclick="openBulkModal()" class="px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-medium rounded-md flex items-center gap-2 transition-colors shadow-sm text-sm">
-                            <i class="ph-bold ph-users-three text-lg"></i> Bulk Add
-                        </button>
-                        <button onclick="openEditModal(null)" class="px-4 py-2 bg-google-blue hover:bg-blue-700 text-white font-medium rounded-md flex items-center gap-2 google-shadow transition-colors text-sm">
-                            <i class="ph-bold ph-plus text-lg"></i> Add New
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden google-shadow">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 border-b border-gray-200">
-                                    <th class="px-6 py-4 text-sm font-semibold text-gray-600">Name</th>
-                                    <th class="px-6 py-4 text-sm font-semibold text-gray-600">Event Name</th>
-                                    <th id="admin-th-award" class="px-6 py-4 text-sm font-semibold text-gray-600">Award/Role</th>
-                                    <th class="px-6 py-4 text-sm font-semibold text-gray-600">Has Custom Image</th>
-                                    <th class="px-6 py-4 text-sm font-semibold text-gray-600 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-table-body" class="divide-y divide-gray-100">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 py-8">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <div class="flex justify-center items-center gap-2 mb-4">
@@ -273,246 +156,46 @@
         </div>
     </footer>
 
-    <!-- ================= MODALS ================= -->
-
-    <!-- Admin Login Modal -->
-    <div id="login-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" onclick="closeLoginModal()"></div>
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm relative z-10 overflow-hidden modal-enter" id="login-modal-content">
-            <div class="p-6">
-                <div class="flex justify-center mb-4">
-                    <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-google-blue">
-                        <i class="ph-fill ph-lock-key text-2xl"></i>
-                    </div>
-                </div>
-                <h3 class="text-xl font-bold text-center text-gray-800 mb-6">Admin Access</h3>
-                <form id="admin-login-form" class="space-y-4">
-                    <div>
-                        <input type="password" id="admin-password" required placeholder="Enter password" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-google-blue focus:border-google-blue outline-none transition-all">
-                    </div>
-                    <button type="submit" class="w-full py-3 bg-google-blue hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
-                        Sign In
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit/Add Participant Modal -->
-    <div id="edit-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeEditModal()"></div>
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg relative z-10 max-h-[90vh] overflow-y-auto modal-enter" id="edit-modal-content">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white z-20">
-                <h3 id="edit-modal-title" class="text-xl font-bold text-gray-800">Add Participant</h3>
-                <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-700 p-1">
-                    <i class="ph ph-x text-xl"></i>
-                </button>
-            </div>
-
-            <form id="edit-form" class="p-6 space-y-5">
-                <input type="hidden" id="edit-id">
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input type="text" id="edit-name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-google-blue outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Event Name</label>
-                    <input type="text" id="edit-track" required placeholder="e.g. Build with AI 2026" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-google-blue outline-none">
-                </div>
-
-                <div id="award-container">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Award / Role Description</label>
-                    <input type="text" id="edit-award" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-google-blue outline-none">
-                </div>
-
-                <div class="border border-gray-200 rounded-md p-4 bg-gray-50">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload Certificate Template (Image)</label>
-                    <input type="file" id="edit-file" accept="image/png, image/jpeg, image/jpg" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-google-blue hover:file:bg-blue-100">
-                    <p class="text-xs text-gray-500 mt-2">Max size: 1.5MB (JPG/PNG). System will auto-write the name in the center. If empty, a default certificate is used.</p>
-                    <div id="current-file-indicator" class="hidden mt-2 text-sm text-google-green flex items-center gap-1 font-medium">
-                        <i class="ph-fill ph-check-circle"></i> Custom Template saved
-                    </div>
-                </div>
-
-                <div class="pt-4 flex justify-end gap-3">
-                    <button type="button" onclick="closeEditModal()" class="px-5 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium">Cancel</button>
-                    <button type="submit" id="save-btn" class="px-5 py-2 bg-google-blue text-white rounded-md hover:bg-blue-700 font-medium flex items-center gap-2">
-                        <span>Save Changes</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Bulk Add Modal -->
-    <div id="bulk-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeBulkModal()"></div>
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg relative z-10 max-h-[90vh] overflow-y-auto modal-enter" id="bulk-modal-content">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white z-20">
-                <h3 class="text-xl font-bold text-gray-800">Bulk Add Participants</h3>
-                <button type="button" onclick="closeBulkModal()" class="text-gray-400 hover:text-gray-700 p-1">
-                    <i class="ph ph-x text-xl"></i>
-                </button>
-            </div>
-
-            <form id="bulk-form" class="p-6 space-y-5">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">List of Names (One per line)</label>
-                    <textarea id="bulk-names" required rows="6" placeholder="John Doe&#10;Jane Smith&#10;Alex Johnson" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-google-blue outline-none resize-y"></textarea>
-                    <p class="text-xs text-gray-500 mt-1">Paste your entire attendee list here. Each new line will create a new certificate.</p>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Event Name (Applies to all)</label>
-                    <input type="text" id="bulk-track" required placeholder="e.g. Build with AI 2026" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-google-blue outline-none">
-                </div>
-
-                <div id="bulk-award-container">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Award / Role (Applies to all)</label>
-                    <input type="text" id="bulk-award" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-google-blue outline-none">
-                </div>
-
-                <div class="border border-gray-200 rounded-md p-4 bg-gray-50">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Master Certificate Template (Optional)</label>
-                    <input type="file" id="bulk-file" accept="image/png, image/jpeg, image/jpg" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-google-blue hover:file:bg-blue-100">
-                    <p class="text-xs text-gray-500 mt-2">Upload one blank template (JPG/PNG). The system will automatically write each participant's name on it.</p>
-                </div>
-
-                <div class="pt-4 flex justify-end gap-3">
-                    <button type="button" onclick="closeBulkModal()" class="px-5 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium">Cancel</button>
-                    <button type="submit" id="bulk-save-btn" class="px-5 py-2 bg-google-blue text-white rounded-md hover:bg-blue-700 font-medium flex items-center gap-2">
-                        <span>Add All Participants</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- ================= APP LOGIC (NO DATABASE) ================= -->
     <script>
-        // State
-        let isAdmin = false;
-        let activeAdminTab = 'top';
-        let topParticipants = [];
-        let generalParticipants = [];
+        // =========================================================================
+        // 🎨 CUSTOM TEMPLATE SETUP
+        // If you have custom certificate images, put the file names inside the quotes below. 
+        // Example: "top-participant-bg.png"
+        // Leave it empty ("") to use the default Google design.
+        // =========================================================================
+        const TOP_CERTIFICATE_TEMPLATE_URL = "";     // Template for Top Participants
+        const GENERAL_CERTIFICATE_TEMPLATE_URL = ""; // Template for General Participants
 
-        // --- LOCAL STORAGE AUTO-SAVE LOGIC ---
-        function saveToLocalStorage() {
-            const data = {
-                topParticipants: topParticipants,
-                generalParticipants: generalParticipants
-            };
-            try {
-                localStorage.setItem('gsap_portal_data', JSON.stringify(data));
-            } catch (e) {
-                console.error("Local storage error:", e);
-                showToast("Browser storage full! Please use Export to save data.", "error");
-            }
-        }
+        // =========================================================================
+        // ✏️ TYPE YOUR PARTICIPANTS HERE ✏️
+        // =========================================================================
 
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('gsap_portal_data');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    topParticipants = parsed.topParticipants || [];
-                    generalParticipants = parsed.generalParticipants || [];
-                    return true;
-                } catch (e) {
-                    console.error("Parse error loading data", e);
-                }
-            }
-            return false;
-        }
-
-        // --- MOCK DATA SEEDING (Run only on first load if empty) ---
-        const dummyTop = [
-            { id: 'T1', name: 'Alex Johnson', track: 'Build with AI 2026', award: 'Top Innovator', createdAt: Date.now() },
-            { id: 'T2', name: 'Maria Garcia', track: 'Cloud Study Jam', award: 'Best Architecture', createdAt: Date.now()-1000 },
-            { id: 'T3', name: 'Sam Lee', track: 'ML Workshop', award: 'AI Champion', createdAt: Date.now()-2000 }
-        ];
-        const dummyGen = [
-            { id: 'G1', name: 'Priya Patel', track: 'Info Session 2026', role: 'Participant', createdAt: Date.now() },
-            { id: 'G2', name: 'David Smith', track: 'Build with AI 2026', role: 'Participant', createdAt: Date.now()-1000 },
-            { id: 'G3', name: 'Elena Rostova', track: 'Android Bootcamp', role: 'Participant', createdAt: Date.now()-2000 },
-            { id: 'G4', name: 'James Wilson', track: 'ML Workshop', role: 'Participant', createdAt: Date.now()-3000 }
+        const topParticipants = [
+            { id: 'T1', name: 'Bharath HM', track: 'Prompt creation', award: 'Outstanding Performance' },
+            { id: 'T2', name: 'N suriya harsha', track: 'Prompt creation', award: 'Outstanding Performance' }
         ];
 
-        function initApp() {
-            const hasData = loadFromLocalStorage();
-            if (!hasData) {
-                // Load dummy data just so the page isn't totally blank on first visit
-                topParticipants = [...dummyTop];
-                generalParticipants = [...dummyGen];
-                saveToLocalStorage(); // Save initial data
-            }
-            renderPublicTop();
-            renderPublicGen();
-        }
+        const generalParticipants = [
+            { id: 'G1', name: 'Kushal kambar', track: 'Prompt creation', role: 'Participant' },
+            { id: 'G2', name: 'Manoj', track: 'Prompt creation', role: 'Participant' },
+            { id: 'G3', name: 'Naresh MS', track: 'Prompt creation', role: 'Participant' },
+            { id: 'G4', name: 'Harshith', track: 'Prompt creation', role: 'Participant' },
+            { id: 'G5', name: 'Amodh', track: 'Prompt creation', role: 'Participant' }
+        ];
 
-        // --- IMPORT & EXPORT LOGIC ---
-        window.exportData = () => {
-            const backupData = {
-                topParticipants: topParticipants,
-                generalParticipants: generalParticipants,
-                exportDate: new Date().toISOString()
-            };
+        // =========================================================================
+        // End of Participant Data
+        // =========================================================================
 
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "gsap_backup.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-
-            showToast("Backup exported successfully!", "success");
-        };
-
-        window.importData = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.topParticipants && data.generalParticipants) {
-                        topParticipants = data.topParticipants;
-                        generalParticipants = data.generalParticipants;
-
-                        saveToLocalStorage(); // Auto-save imported data
-
-                        renderPublicTop();
-                        renderPublicGen();
-                        if (isAdmin) renderAdminTable();
-
-                        showToast("Backup loaded successfully!", "success");
-                    } else {
-                        showToast("Invalid backup file structure.", "error");
-                    }
-                } catch (err) {
-                    console.error("Import error:", err);
-                    showToast("Failed to parse backup file.", "error");
-                }
-                // Clear input so same file can be uploaded again
-                event.target.value = '';
-            };
-            reader.readAsText(file);
-        };
-
-        // --- UI RENDERING (PUBLIC) ---
+        // --- UI RENDERING ---
         function renderPublicTop() {
             const container = document.getElementById('public-top-container');
             const search = document.getElementById('public-search').value.toLowerCase();
-
+            
             const filtered = topParticipants.filter(p => p.name.toLowerCase().includes(search));
-
+            
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500">No top participants found matching criteria.</div>`;
+                container.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500">No top participants found matching your search.</div>`;
                 return;
             }
 
@@ -544,16 +227,11 @@
         function renderPublicGen() {
             const container = document.getElementById('public-gen-container');
             const search = document.getElementById('public-search').value.toLowerCase();
-            const filter = document.getElementById('public-track-filter').value.toLowerCase();
-
-            const filtered = generalParticipants.filter(p => {
-                const matchSearch = p.name.toLowerCase().includes(search);
-                const matchFilter = !filter || p.track.toLowerCase().includes(filter);
-                return matchSearch && matchFilter;
-            });
-
+            
+            const filtered = generalParticipants.filter(p => p.name.toLowerCase().includes(search));
+            
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500">No participants found matching criteria.</div>`;
+                container.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500">No participants found matching your search.</div>`;
                 return;
             }
 
@@ -567,7 +245,7 @@
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-1 line-clamp-1">${cert.name}</h3>
                     <p class="text-sm text-gray-500 mb-4">${cert.role || 'Participant'}</p>
-
+                    
                     <div class="mt-auto flex gap-2 w-full">
                         <button onclick="window.handleCert('${cert.id}', 'general', 'download')" class="flex-1 py-2 border-2 border-transparent hover:border-google-blue bg-gray-50 hover:bg-white text-gray-700 hover:text-google-blue font-medium rounded-lg transition-colors flex justify-center items-center gap-2" title="Download">
                             <i class="ph ph-download-simple"></i> Save
@@ -580,365 +258,20 @@
             `).join('');
         }
 
-        // --- SEARCH EVENT LISTENERS ---
         document.getElementById('public-search').addEventListener('input', () => {
             renderPublicTop();
             renderPublicGen();
         });
-        document.getElementById('public-track-filter').addEventListener('input', renderPublicGen);
-
-        // --- ADMIN LOGIN LOGIC ---
-        const loginModal = document.getElementById('login-modal');
-        const loginModalContent = document.getElementById('login-modal-content');
-        const adminLoginBtn = document.getElementById('admin-login-btn');
-        const navHomeBtn = document.getElementById('nav-home-btn');
-
-        window.closeLoginModal = () => {
-            loginModalContent.classList.remove('modal-enter-active');
-            loginModalContent.classList.add('modal-exit-active');
-            setTimeout(() => {
-                loginModal.classList.add('hidden');
-                loginModalContent.classList.remove('modal-exit-active');
-            }, 200);
-        };
-
-        adminLoginBtn.addEventListener('click', () => {
-            if (isAdmin) {
-                // Logout flow
-                isAdmin = false;
-                document.getElementById('public-view').classList.remove('hidden');
-                document.getElementById('admin-view').classList.add('hidden');
-                adminLoginBtn.innerHTML = `<i class="ph ph-shield-check text-lg"></i><span>Admin Login</span>`;
-                navHomeBtn.classList.add('hidden');
-            } else {
-                // Login flow
-                document.getElementById('admin-password').value = '';
-                loginModal.classList.remove('hidden');
-                void loginModal.offsetWidth;
-                loginModalContent.classList.add('modal-enter-active');
-                loginModalContent.classList.remove('modal-enter');
-            }
-        });
-
-        navHomeBtn.addEventListener('click', () => {
-             document.getElementById('public-view').classList.remove('hidden');
-             document.getElementById('admin-view').classList.add('hidden');
-             navHomeBtn.classList.add('hidden');
-             adminLoginBtn.innerHTML = `<i class="ph ph-layout text-lg"></i><span>Admin Dash</span>`;
-        });
-
-        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const pwd = document.getElementById('admin-password').value;
-            if (pwd === 'VinayJoyboy') {
-                isAdmin = true;
-                window.closeLoginModal();
-                showToast("Admin access granted", "success");
-
-                // Show Admin Dashboard
-                document.getElementById('public-view').classList.add('hidden');
-                document.getElementById('admin-view').classList.remove('hidden');
-                navHomeBtn.classList.remove('hidden');
-                adminLoginBtn.innerHTML = `<i class="ph ph-sign-out text-lg"></i><span>Sign Out</span>`;
-
-                renderAdminTable();
-            } else {
-                showToast("Incorrect password", "error");
-                loginModalContent.style.transform = 'translateX(-10px)';
-                setTimeout(() => loginModalContent.style.transform = 'translateX(10px)', 50);
-                setTimeout(() => loginModalContent.style.transform = 'translateX(0)', 100);
-            }
-        });
-
-        // --- ADMIN DASHBOARD LOGIC ---
-        window.switchAdminTab = (tab) => {
-            activeAdminTab = tab;
-            document.getElementById('tab-btn-top').className = `w-full text-left px-4 py-3 rounded-md font-medium transition-colors flex items-center gap-3 ${tab === 'top' ? 'text-google-blue bg-blue-50' : 'text-gray-600 hover:bg-gray-100'}`;
-            document.getElementById('tab-btn-general').className = `w-full text-left px-4 py-3 rounded-md font-medium transition-colors flex items-center gap-3 ${tab === 'general' ? 'text-google-blue bg-blue-50' : 'text-gray-600 hover:bg-gray-100'}`;
-
-            document.getElementById('admin-page-title').textContent = tab === 'top' ? 'Top Participants' : 'All Participants';
-            document.getElementById('admin-th-award').textContent = tab === 'top' ? 'Award' : 'Role';
-
-            renderAdminTable();
-        };
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('admin-table-body');
-            const data = activeAdminTab === 'top' ? topParticipants : generalParticipants;
-
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No participants found in this category.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = data.map(p => `
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4">
-                        <div class="font-medium text-gray-900">${p.name}</div>
-                        <div class="text-xs text-gray-400 font-mono">ID: ${p.id}</div>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">${p.track}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600">${activeAdminTab === 'top' ? p.award : (p.role || 'Participant')}</td>
-                    <td class="px-6 py-4 text-sm">
-                        ${p.templateBase64 ? '<span class="text-google-green flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Yes</span>' : '<span class="text-gray-400">Default</span>'}
-                    </td>
-                    <td class="px-6 py-4 text-right space-x-2">
-                        <button onclick="window.openEditModal('${p.id}')" class="p-2 text-google-blue hover:bg-blue-50 rounded-md transition-colors" title="Edit">
-                            <i class="ph-bold ph-pencil-simple text-lg"></i>
-                        </button>
-                        <button onclick="window.deleteParticipant('${p.id}')" class="p-2 text-google-red hover:bg-red-50 rounded-md transition-colors" title="Delete">
-                            <i class="ph-bold ph-trash text-lg"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // --- ADD/EDIT MODAL LOGIC ---
-        const editModal = document.getElementById('edit-modal');
-        const editModalContent = document.getElementById('edit-modal-content');
-        const editForm = document.getElementById('edit-form');
-
-        window.openEditModal = (id = null) => {
-            const isTop = activeAdminTab === 'top';
-            document.getElementById('edit-modal-title').textContent = id ? 'Edit Participant' : 'Add New Participant';
-            document.getElementById('award-container').style.display = isTop ? 'block' : 'none';
-
-            editForm.reset();
-            document.getElementById('edit-id').value = id || '';
-            document.getElementById('current-file-indicator').classList.add('hidden');
-
-            if (id) {
-                const data = isTop ? topParticipants.find(p => p.id === id) : generalParticipants.find(p => p.id === id);
-                if (data) {
-                    document.getElementById('edit-name').value = data.name;
-                    document.getElementById('edit-track').value = data.track;
-                    if(isTop) document.getElementById('edit-award').value = data.award;
-                    if(data.templateBase64) document.getElementById('current-file-indicator').classList.remove('hidden');
-                }
-            } else if (isTop) {
-                document.getElementById('edit-award').value = 'Outstanding Participant';
-            }
-
-            editModal.classList.remove('hidden');
-            void editModal.offsetWidth;
-            editModalContent.classList.add('modal-enter-active');
-            editModalContent.classList.remove('modal-enter');
-        };
-
-        window.closeEditModal = () => {
-            editModalContent.classList.remove('modal-enter-active');
-            editModalContent.classList.add('modal-exit-active');
-            setTimeout(() => {
-                editModal.classList.add('hidden');
-                editModalContent.classList.remove('modal-exit-active');
-            }, 200);
-        };
-
-        editForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAdmin) return;
-
-            const saveBtn = document.getElementById('save-btn');
-            saveBtn.innerHTML = `<i class="ph ph-spinner animate-spin"></i> Saving...`;
-            saveBtn.disabled = true;
-
-            const id = document.getElementById('edit-id').value || `ID-${Date.now()}`;
-            const isTop = activeAdminTab === 'top';
-
-            let participantData = {
-                id: id,
-                name: document.getElementById('edit-name').value,
-                track: document.getElementById('edit-track').value,
-                createdAt: Date.now()
-            };
-
-            if (isTop) {
-                participantData.award = document.getElementById('edit-award').value;
-            } else {
-                participantData.role = 'Participant';
-            }
-
-            // Handle Image Upload
-            const fileInput = document.getElementById('edit-file');
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                if (file.size > 1.5 * 1024 * 1024) {
-                    showToast("Image exceeds 1.5MB limit.", "error");
-                    saveBtn.innerHTML = `Save Changes`;
-                    saveBtn.disabled = false;
-                    return;
-                }
-
-                try {
-                    const base64 = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
-                    participantData.templateBase64 = base64;
-                } catch (err) {
-                    showToast("Failed to read image file", "error");
-                }
-            } else if (document.getElementById('edit-id').value) {
-                const existing = isTop ? topParticipants.find(p => p.id === id) : generalParticipants.find(p => p.id === id);
-                if (existing && existing.templateBase64) {
-                    participantData.templateBase64 = existing.templateBase64;
-                }
-            }
-
-            // Save to memory
-            const targetArray = isTop ? topParticipants : generalParticipants;
-            const existingIndex = targetArray.findIndex(p => p.id === id);
-
-            if (existingIndex > -1) {
-                targetArray[existingIndex] = { ...targetArray[existingIndex], ...participantData };
-            } else {
-                targetArray.unshift(participantData);
-            }
-
-            saveToLocalStorage(); // Auto-save addition/edits
-
-            if(isTop) renderPublicTop(); else renderPublicGen();
-            renderAdminTable();
-
-            showToast("Participant saved locally!", "success");
-            window.closeEditModal();
-            saveBtn.innerHTML = `Save Changes`;
-            saveBtn.disabled = false;
-        });
-
-        // --- BULK ADD LOGIC ---
-        const bulkModal = document.getElementById('bulk-modal');
-        const bulkModalContent = document.getElementById('bulk-modal-content');
-        const bulkForm = document.getElementById('bulk-form');
-
-        window.openBulkModal = () => {
-            const isTop = activeAdminTab === 'top';
-            document.getElementById('bulk-award-container').style.display = isTop ? 'block' : 'none';
-            bulkForm.reset();
-            if (isTop) document.getElementById('bulk-award').value = 'Outstanding Participant';
-
-            bulkModal.classList.remove('hidden');
-            void bulkModal.offsetWidth;
-            bulkModalContent.classList.add('modal-enter-active');
-            bulkModalContent.classList.remove('modal-enter');
-        };
-
-        window.closeBulkModal = () => {
-            bulkModalContent.classList.remove('modal-enter-active');
-            bulkModalContent.classList.add('modal-exit-active');
-            setTimeout(() => {
-                bulkModal.classList.add('hidden');
-                bulkModalContent.classList.remove('modal-exit-active');
-            }, 200);
-        };
-
-        bulkForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAdmin) return;
-
-            const btn = document.getElementById('bulk-save-btn');
-            btn.innerHTML = `<i class="ph ph-spinner animate-spin"></i> Processing...`;
-            btn.disabled = true;
-
-            const namesText = document.getElementById('bulk-names').value;
-            const namesList = namesText.split('\n').map(n => n.trim()).filter(n => n.length > 0);
-            const track = document.getElementById('bulk-track').value;
-            const award = document.getElementById('bulk-award').value;
-
-            const isTop = activeAdminTab === 'top';
-
-            let templateBase64 = null;
-            const fileInput = document.getElementById('bulk-file');
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                if (file.size > 1.5 * 1024 * 1024) {
-                    showToast("Image exceeds 1.5MB limit. Please compress it.", "error");
-                    btn.innerHTML = `Add All Participants`;
-                    btn.disabled = false;
-                    return;
-                }
-                try {
-                    templateBase64 = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
-                } catch (err) {
-                    showToast("Failed to read master template file", "error");
-                }
-            }
-
-            let addedCount = 0;
-            const now = Date.now();
-            const targetArray = isTop ? topParticipants : generalParticipants;
-
-            for (let i = 0; i < namesList.length; i++) {
-                const id = `ID-${now}-${i}`;
-                let participantData = {
-                    id: id,
-                    name: namesList[i],
-                    track: track,
-                    createdAt: now + i
-                };
-
-                if (isTop) {
-                    participantData.award = award;
-                } else {
-                    participantData.role = 'Participant';
-                }
-
-                if (templateBase64) {
-                    participantData.templateBase64 = templateBase64;
-                }
-
-                targetArray.unshift(participantData);
-                addedCount++;
-            }
-
-            saveToLocalStorage(); // Auto-save bulk additions
-
-            if (isTop) renderPublicTop(); else renderPublicGen();
-            renderAdminTable();
-
-            showToast(`Successfully added ${addedCount} participants!`, "success");
-            window.closeBulkModal();
-            btn.innerHTML = `Add All Participants`;
-            btn.disabled = false;
-        });
-
-        window.deleteParticipant = async (id) => {
-            if(!isAdmin) return;
-            const isTop = activeAdminTab === 'top';
-
-            if(confirm("Are you sure you want to delete this participant?")) {
-                if (isTop) {
-                    topParticipants = topParticipants.filter(p => p.id !== id);
-                    renderPublicTop();
-                } else {
-                    generalParticipants = generalParticipants.filter(p => p.id !== id);
-                    renderPublicGen();
-                }
-
-                saveToLocalStorage(); // Auto-save deletions
-
-                renderAdminTable();
-                showToast("Participant deleted locally", "success");
-            }
-        };
 
         // --- DOWNLOAD & PRINT LOGIC ---
         window.handleCert = (id, type, action) => {
             const dataList = type === 'top' ? topParticipants : generalParticipants;
             const cert = dataList.find(c => c.id === id);
-
+            
             if (!cert) return;
 
             showToast(action === 'print' ? "Preparing to print..." : "Generating certificate...", "info");
-
+            
             const finishAction = (dataUrl) => {
                 if (action === 'download') {
                     const a = document.createElement('a');
@@ -962,38 +295,52 @@
                 }
             };
 
-            if (cert.templateBase64) {
+            // Determine which template to use based on the section (Top vs General)
+            let activeTemplateUrl = "";
+            if (type === 'top' && TOP_CERTIFICATE_TEMPLATE_URL !== "") {
+                activeTemplateUrl = TOP_CERTIFICATE_TEMPLATE_URL;
+            } else if (type === 'general' && GENERAL_CERTIFICATE_TEMPLATE_URL !== "") {
+                activeTemplateUrl = GENERAL_CERTIFICATE_TEMPLATE_URL;
+            }
+
+            if (activeTemplateUrl !== "") {
                 // Draw custom uploaded template and write name
                 const img = new Image();
+                img.crossOrigin = "Anonymous"; // Allows loading from external URLs if needed
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     canvas.width = img.width;
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
-
-                    // Draw Background
-                    ctx.drawImage(img, 0, 0);
-
-                    // Configure Text Settings
+                    
+                    // Draw the template background
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Center alignment for text
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
-                    ctx.fillStyle = "#202124"; // Dark grey text
-
+                    ctx.fillStyle = "#202124"; // TEXT COLOR: Change this hex code to alter name color
+                    
                     // Auto-scale font size based on template width
-                    const fontSize = Math.floor(canvas.width * 0.05);
+                    const fontSize = Math.floor(canvas.width * 0.05); 
                     ctx.font = `bold ${fontSize}px 'Poppins', sans-serif`;
-
-                    // Write Name in Center
+                    
+                    // Write Name in the center of the image
                     const centerX = canvas.width / 2;
-                    const centerY = canvas.height / 2;
+                    // Position adjustment: Change "canvas.height / 2" to move text up or down
+                    const centerY = canvas.height / 2; 
+                    
                     ctx.fillText(cert.name, centerX, centerY);
-
+                    
                     finishAction(canvas.toDataURL('image/png'));
                 };
-                img.onerror = () => showToast("Error loading template", "error");
-                img.src = cert.templateBase64;
+                img.onerror = () => {
+                    showToast("Error loading custom template image. Please check the file name.", "error");
+                };
+                img.src = activeTemplateUrl;
+
             } else {
-                // Generate default
+                // Generate default beautiful Google certificate automatically
                 const canvas = document.createElement('canvas');
                 canvas.width = 1600;
                 canvas.height = 1200;
@@ -1008,7 +355,7 @@
                 ctx.fillStyle = "#EA4335"; ctx.fillRect(0, 25, canvas.width, 25);
                 ctx.fillStyle = "#FBBC05"; ctx.fillRect(0, 50, canvas.width, 25);
                 ctx.fillStyle = "#34A853"; ctx.fillRect(0, 75, canvas.width, 25);
-
+                
                 // Bottom Border
                 ctx.fillStyle = "#34A853"; ctx.fillRect(0, canvas.height - 25, canvas.width, 25);
                 ctx.fillStyle = "#FBBC05"; ctx.fillRect(0, canvas.height - 50, canvas.width, 25);
@@ -1041,42 +388,51 @@
                 ctx.fillStyle = "#202124";
                 ctx.font = "45px 'Poppins', sans-serif";
                 ctx.fillText(`For outstanding participation in`, centerX, 880);
-
+                
                 // Event Name
                 ctx.fillStyle = "#34A853";
                 ctx.font = "bold 55px 'Poppins', sans-serif";
                 ctx.fillText(cert.track, centerX, 970);
 
+                // Add Award text if it's a Top Participant
+                if (cert.award) {
+                    ctx.fillStyle = "#EA4335";
+                    ctx.font = "bold 40px 'Poppins', sans-serif";
+                    ctx.fillText(`Awarded: ${cert.award}`, centerX, 1070);
+                }
+
                 finishAction(canvas.toDataURL('image/png'));
             }
         };
 
-        // --- UTILS ---
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             const bg = type === 'error' ? 'bg-google-red' : (type === 'success' ? 'bg-google-green' : 'bg-gray-800');
-
+            
             toast.className = `${bg} text-white px-4 py-3 rounded-md shadow-lg flex items-center gap-3 transform translate-y-10 opacity-0 transition-all duration-300`;
             toast.innerHTML = `
                 <i class="ph-fill ${type === 'success' ? 'ph-check-circle' : 'ph-info'} text-xl"></i>
                 <span class="font-medium text-sm">${message}</span>
             `;
-
+            
             container.appendChild(toast);
-
+            
             setTimeout(() => {
                 toast.classList.remove('translate-y-10', 'opacity-0');
             }, 10);
-
+            
             setTimeout(() => {
                 toast.classList.add('translate-y-10', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
-        // Initialize App
-        initApp();
+        // Initialize the page on load
+        window.onload = () => {
+            renderPublicTop();
+            renderPublicGen();
+        };
 
     </script>
 </body>
