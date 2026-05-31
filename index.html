@@ -199,32 +199,41 @@
         <div class="flex-grow p-6 md:p-10 max-h-screen overflow-y-auto">
             <div class="max-w-5xl mx-auto">
 
-                <!-- LOCAL MODE WARNING BANNER -->
-                <div id="local-mode-warning" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-r-md shadow-sm">
+                <!-- OFFLINE MODE BANNER -->
+                <div class="bg-blue-50 border-l-4 border-google-blue p-4 mb-8 rounded-r-md shadow-sm">
                     <div class="flex">
                         <div class="flex-shrink-0 pt-0.5">
-                            <i class="ph-fill ph-warning-circle text-yellow-500 text-xl"></i>
+                            <i class="ph-fill ph-info text-google-blue text-xl"></i>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-bold text-yellow-800">Temporary Database Active</h3>
-                            <p class="text-sm text-yellow-700 mt-1">
-                                You are running this portal locally without database keys. Any participants you add right now will be erased if you close or refresh this page.
+                            <h3 class="text-sm font-bold text-blue-800">Local Offline Mode Active</h3>
+                            <p class="text-sm text-blue-700 mt-1">
+                                You are running this portal without a database. Before you close this page, be sure to click <strong>Export Data</strong> to save your participants to a file. You can restore them anytime using <strong>Import Data</strong>.
                             </p>
-                            <button onclick="openDbInstructions()" class="mt-3 inline-flex items-center gap-1 px-3 py-1.5 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 text-sm font-medium rounded transition-colors border border-yellow-300">
-                                <i class="ph ph-database text-lg"></i> Learn how to connect a permanent database
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <h2 id="admin-page-title" class="text-3xl font-bold text-gray-800">Top Participants</h2>
-                    <div class="flex items-center gap-3">
-                        <button onclick="openBulkModal()" class="px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-medium rounded-md flex items-center gap-2 transition-colors shadow-sm">
-                            <i class="ph-bold ph-users-three"></i> Bulk Add
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Import/Export Buttons -->
+                        <div class="flex items-center bg-white rounded-md border border-gray-300 overflow-hidden shadow-sm mr-2">
+                            <label class="px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium text-sm border-r border-gray-300 cursor-pointer flex items-center gap-2 transition-colors">
+                                <i class="ph-bold ph-upload-simple text-lg"></i> Import
+                                <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
+                            </label>
+                            <button onclick="exportData()" class="px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium text-sm flex items-center gap-2 transition-colors">
+                                <i class="ph-bold ph-download-simple text-lg"></i> Export
+                            </button>
+                        </div>
+
+                        <button onclick="openBulkModal()" class="px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-medium rounded-md flex items-center gap-2 transition-colors shadow-sm text-sm">
+                            <i class="ph-bold ph-users-three text-lg"></i> Bulk Add
                         </button>
-                        <button onclick="openEditModal(null)" class="px-5 py-2.5 bg-google-blue hover:bg-blue-700 text-white font-medium rounded-md flex items-center gap-2 google-shadow transition-colors">
-                            <i class="ph-bold ph-plus"></i> Add New
+                        <button onclick="openEditModal(null)" class="px-4 py-2 bg-google-blue hover:bg-blue-700 text-white font-medium rounded-md flex items-center gap-2 google-shadow transition-colors text-sm">
+                            <i class="ph-bold ph-plus text-lg"></i> Add New
                         </button>
                     </div>
                 </div>
@@ -321,7 +330,7 @@
                 <div class="border border-gray-200 rounded-md p-4 bg-gray-50">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Upload Certificate Template (Image)</label>
                     <input type="file" id="edit-file" accept="image/png, image/jpeg, image/jpg" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-google-blue hover:file:bg-blue-100">
-                    <p class="text-xs text-gray-500 mt-2">Max size: 800KB (JPG/PNG). System will auto-write the name in the center. If empty, a default certificate is used.</p>
+                    <p class="text-xs text-gray-500 mt-2">Max size: 1.5MB (JPG/PNG). System will auto-write the name in the center. If empty, a default certificate is used.</p>
                     <div id="current-file-indicator" class="hidden mt-2 text-sm text-google-green flex items-center gap-1 font-medium">
                         <i class="ph-fill ph-check-circle"></i> Custom Template saved
                     </div>
@@ -381,52 +390,8 @@
         </div>
     </div>
 
-    <!-- Database Instructions Modal -->
-    <div id="db-instructions-modal" class="fixed inset-0 z-[105] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-gray-900/70 backdrop-blur-sm" onclick="closeDbInstructions()"></div>
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl relative z-10 max-h-[90vh] overflow-y-auto modal-enter" id="db-instructions-content">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white z-20">
-                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                    <i class="ph-fill ph-database text-google-blue"></i> Connect Permanent Database
-                </h3>
-                <button type="button" onclick="closeDbInstructions()" class="text-gray-400 hover:text-gray-700 p-1">
-                    <i class="ph ph-x text-xl"></i>
-                </button>
-            </div>
 
-            <div class="p-6 space-y-6 text-gray-700">
-                <p>Because you are running this code in PyCharm, you need to plug in a free Google Firebase database key so your participants are saved permanently.</p>
-
-                <ol class="list-decimal pl-5 space-y-4 font-medium">
-                    <li>Go to <a href="https://console.firebase.google.com/" target="_blank" class="text-google-blue hover:underline">console.firebase.google.com</a> and click <strong>"Add Project"</strong>.</li>
-                    <li>Once inside your new project, click the Web icon <code>&lt;/&gt;</code> to create a web app.</li>
-                    <li>Firebase will show you a block of code called <code>firebaseConfig</code>. <strong>Copy the keys inside it.</strong></li>
-                    <li>In the left menu, go to <strong>Build &gt; Authentication</strong>. Click "Get Started", go to the "Sign-in method" tab, and enable <strong>Anonymous</strong> sign-in.</li>
-                    <li>In the left menu, go to <strong>Build &gt; Firestore Database</strong>. Click "Create database" and select <strong>Start in test mode</strong>.</li>
-                </ol>
-
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <p class="text-sm mb-2 font-bold">Finally, paste your keys in PyCharm:</p>
-                    <p class="text-sm text-gray-600 mb-3">Open this HTML file in PyCharm, scroll down to around line <strong>630</strong>, and replace the placeholder text with your real keys:</p>
-                    <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>const firebaseConfig = {
-    apiKey: "YOUR_REAL_API_KEY_HERE",
-    authDomain: "your-project.firebaseapp.com",
-    projectId: "your-project-id",
-    storageBucket: "your-project.appspot.com",
-    messagingSenderId: "12345678",
-    appId: "1:1234:web:abcd"
-};</code></pre>
-                </div>
-
-                <div class="pt-2 flex justify-end">
-                    <button onclick="closeDbInstructions()" class="px-5 py-2.5 bg-google-blue hover:bg-blue-700 text-white font-medium rounded-md transition-colors">I Understand</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- ================= PYTHON API & APP LOGIC ================= -->
+    <!-- ================= APP LOGIC (NO DATABASE) ================= -->
     <script>
         // State
         let isAdmin = false;
@@ -434,26 +399,110 @@
         let topParticipants = [];
         let generalParticipants = [];
 
-        // --- FETCH DATA FROM PYTHON API ---
-        async function loadData() {
+        // --- LOCAL STORAGE AUTO-SAVE LOGIC ---
+        function saveToLocalStorage() {
+            const data = {
+                topParticipants: topParticipants,
+                generalParticipants: generalParticipants
+            };
             try {
-                const res = await fetch('/api/participants');
-                if (!res.ok) throw new Error("Server disconnected");
-                const data = await res.json();
-
-                topParticipants = data.top || [];
-                generalParticipants = data.general || [];
-
-                renderPublicTop();
-                renderPublicGen();
-                if (isAdmin) renderAdminTable();
-            } catch(e) {
-                console.error("Database connection error:", e);
+                localStorage.setItem('gsap_portal_data', JSON.stringify(data));
+            } catch (e) {
+                console.error("Local storage error:", e);
+                showToast("Browser storage full! Please use Export to save data.", "error");
             }
         }
 
-        // Initial load
-        loadData();
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('gsap_portal_data');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    topParticipants = parsed.topParticipants || [];
+                    generalParticipants = parsed.generalParticipants || [];
+                    return true;
+                } catch (e) {
+                    console.error("Parse error loading data", e);
+                }
+            }
+            return false;
+        }
+
+        // --- MOCK DATA SEEDING (Run only on first load if empty) ---
+        const dummyTop = [
+            { id: 'T1', name: 'Alex Johnson', track: 'Build with AI 2026', award: 'Top Innovator', createdAt: Date.now() },
+            { id: 'T2', name: 'Maria Garcia', track: 'Cloud Study Jam', award: 'Best Architecture', createdAt: Date.now()-1000 },
+            { id: 'T3', name: 'Sam Lee', track: 'ML Workshop', award: 'AI Champion', createdAt: Date.now()-2000 }
+        ];
+        const dummyGen = [
+            { id: 'G1', name: 'Priya Patel', track: 'Info Session 2026', role: 'Participant', createdAt: Date.now() },
+            { id: 'G2', name: 'David Smith', track: 'Build with AI 2026', role: 'Participant', createdAt: Date.now()-1000 },
+            { id: 'G3', name: 'Elena Rostova', track: 'Android Bootcamp', role: 'Participant', createdAt: Date.now()-2000 },
+            { id: 'G4', name: 'James Wilson', track: 'ML Workshop', role: 'Participant', createdAt: Date.now()-3000 }
+        ];
+
+        function initApp() {
+            const hasData = loadFromLocalStorage();
+            if (!hasData) {
+                // Load dummy data just so the page isn't totally blank on first visit
+                topParticipants = [...dummyTop];
+                generalParticipants = [...dummyGen];
+                saveToLocalStorage(); // Save initial data
+            }
+            renderPublicTop();
+            renderPublicGen();
+        }
+
+        // --- IMPORT & EXPORT LOGIC ---
+        window.exportData = () => {
+            const backupData = {
+                topParticipants: topParticipants,
+                generalParticipants: generalParticipants,
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "gsap_backup.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+
+            showToast("Backup exported successfully!", "success");
+        };
+
+        window.importData = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.topParticipants && data.generalParticipants) {
+                        topParticipants = data.topParticipants;
+                        generalParticipants = data.generalParticipants;
+
+                        saveToLocalStorage(); // Auto-save imported data
+
+                        renderPublicTop();
+                        renderPublicGen();
+                        if (isAdmin) renderAdminTable();
+
+                        showToast("Backup loaded successfully!", "success");
+                    } else {
+                        showToast("Invalid backup file structure.", "error");
+                    }
+                } catch (err) {
+                    console.error("Import error:", err);
+                    showToast("Failed to parse backup file.", "error");
+                }
+                // Clear input so same file can be uploaded again
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        };
 
         // --- UI RENDERING (PUBLIC) ---
         function renderPublicTop() {
@@ -537,27 +586,6 @@
             renderPublicGen();
         });
         document.getElementById('public-track-filter').addEventListener('input', renderPublicGen);
-
-        // --- DATABASE INSTRUCTIONS LOGIC ---
-        window.openDbInstructions = () => {
-            const modal = document.getElementById('db-instructions-modal');
-            const content = document.getElementById('db-instructions-content');
-            modal.classList.remove('hidden');
-            void modal.offsetWidth;
-            content.classList.add('modal-enter-active');
-            content.classList.remove('modal-enter');
-        };
-
-        window.closeDbInstructions = () => {
-            const modal = document.getElementById('db-instructions-modal');
-            const content = document.getElementById('db-instructions-content');
-            content.classList.remove('modal-enter-active');
-            content.classList.add('modal-exit-active');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                content.classList.remove('modal-exit-active');
-            }, 200);
-        };
 
         // --- ADMIN LOGIN LOGIC ---
         const loginModal = document.getElementById('login-modal');
@@ -717,7 +745,6 @@
 
             const id = document.getElementById('edit-id').value || `ID-${Date.now()}`;
             const isTop = activeAdminTab === 'top';
-            const collectionName = isTop ? 'top_participants' : 'general_participants';
 
             let participantData = {
                 id: id,
@@ -736,8 +763,8 @@
             const fileInput = document.getElementById('edit-file');
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
-                if (file.size > 800 * 1024) {
-                    showToast("Image exceeds 800KB limit. Please optimize it.", "error");
+                if (file.size > 1.5 * 1024 * 1024) {
+                    showToast("Image exceeds 1.5MB limit.", "error");
                     saveBtn.innerHTML = `Save Changes`;
                     saveBtn.disabled = false;
                     return;
@@ -761,24 +788,25 @@
                 }
             }
 
-            try {
-                participantData.category = isTop ? 'top' : 'general';
-                await fetch('/api/participants', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(participantData)
-                });
+            // Save to memory
+            const targetArray = isTop ? topParticipants : generalParticipants;
+            const existingIndex = targetArray.findIndex(p => p.id === id);
 
-                showToast("Participant saved successfully!", "success");
-                window.closeEditModal();
-                await loadData();
-            } catch (error) {
-                console.error("Save error:", error);
-                showToast("Error saving participant", "error");
-            } finally {
-                saveBtn.innerHTML = `Save Changes`;
-                saveBtn.disabled = false;
+            if (existingIndex > -1) {
+                targetArray[existingIndex] = { ...targetArray[existingIndex], ...participantData };
+            } else {
+                targetArray.unshift(participantData);
             }
+
+            saveToLocalStorage(); // Auto-save addition/edits
+
+            if(isTop) renderPublicTop(); else renderPublicGen();
+            renderAdminTable();
+
+            showToast("Participant saved locally!", "success");
+            window.closeEditModal();
+            saveBtn.innerHTML = `Save Changes`;
+            saveBtn.disabled = false;
         });
 
         // --- BULK ADD LOGIC ---
@@ -821,14 +849,13 @@
             const award = document.getElementById('bulk-award').value;
 
             const isTop = activeAdminTab === 'top';
-            const collectionName = isTop ? 'top_participants' : 'general_participants';
 
             let templateBase64 = null;
             const fileInput = document.getElementById('bulk-file');
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
-                if (file.size > 800 * 1024) {
-                    showToast("Image exceeds 800KB limit. Please compress it.", "error");
+                if (file.size > 1.5 * 1024 * 1024) {
+                    showToast("Image exceeds 1.5MB limit. Please compress it.", "error");
                     btn.innerHTML = `Add All Participants`;
                     btn.disabled = false;
                     return;
@@ -847,64 +874,59 @@
 
             let addedCount = 0;
             const now = Date.now();
-            const participantsToUpload = [];
+            const targetArray = isTop ? topParticipants : generalParticipants;
 
-            try {
-                for (let i = 0; i < namesList.length; i++) {
-                    const id = `ID-${now}-${i}`;
-                    let participantData = {
-                        id: id,
-                        name: namesList[i],
-                        track: track,
-                        createdAt: now + i
-                    };
+            for (let i = 0; i < namesList.length; i++) {
+                const id = `ID-${now}-${i}`;
+                let participantData = {
+                    id: id,
+                    name: namesList[i],
+                    track: track,
+                    createdAt: now + i
+                };
 
-                    if (isTop) {
-                        participantData.award = award;
-                    } else {
-                        participantData.role = 'Participant';
-                    }
-
-                    if (templateBase64) {
-                        participantData.templateBase64 = templateBase64;
-                    }
-
-                    participantData.category = isTop ? 'top' : 'general';
-                    participantsToUpload.push(participantData);
-                    addedCount++;
+                if (isTop) {
+                    participantData.award = award;
+                } else {
+                    participantData.role = 'Participant';
                 }
 
-                await fetch('/api/participants/bulk', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(participantsToUpload)
-                });
+                if (templateBase64) {
+                    participantData.templateBase64 = templateBase64;
+                }
 
-                await loadData();
-
-                showToast(`Successfully added ${addedCount} participants!`, "success");
-                window.closeBulkModal();
-            } catch (error) {
-                console.error("Bulk Add error:", error);
-                showToast("Error adding bulk participants", "error");
-            } finally {
-                btn.innerHTML = `Add All Participants`;
-                btn.disabled = false;
+                targetArray.unshift(participantData);
+                addedCount++;
             }
+
+            saveToLocalStorage(); // Auto-save bulk additions
+
+            if (isTop) renderPublicTop(); else renderPublicGen();
+            renderAdminTable();
+
+            showToast(`Successfully added ${addedCount} participants!`, "success");
+            window.closeBulkModal();
+            btn.innerHTML = `Add All Participants`;
+            btn.disabled = false;
         });
 
         window.deleteParticipant = async (id) => {
             if(!isAdmin) return;
+            const isTop = activeAdminTab === 'top';
 
             if(confirm("Are you sure you want to delete this participant?")) {
-                try {
-                    await fetch(`/api/participants/${id}`, { method: 'DELETE' });
-                    showToast("Participant deleted", "success");
-                    await loadData();
-                } catch(e) {
-                    console.error("Delete error", e);
-                    showToast("Failed to delete", "error");
+                if (isTop) {
+                    topParticipants = topParticipants.filter(p => p.id !== id);
+                    renderPublicTop();
+                } else {
+                    generalParticipants = generalParticipants.filter(p => p.id !== id);
+                    renderPublicGen();
                 }
+
+                saveToLocalStorage(); // Auto-save deletions
+
+                renderAdminTable();
+                showToast("Participant deleted locally", "success");
             }
         };
 
@@ -1052,6 +1074,9 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
+
+        // Initialize App
+        initApp();
 
     </script>
 </body>
