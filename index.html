@@ -21,9 +21,7 @@
                         'g-green': '#34A853',
                         'g-gray': '#F8F9FA'
                     },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                    },
+                    animation: { 'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards' },
                     keyframes: {
                         fadeInUp: {
                             '0%': { opacity: '0', transform: 'translateY(30px) scale(0.95)' },
@@ -38,20 +36,11 @@
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #F8F9FA; color: #202124; }
         .google-card {
-            background: white;
-            border: 1px solid #DADCE0;
-            border-radius: 16px;
+            background: white; border: 1px solid #DADCE0; border-radius: 16px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .google-card:hover {
-            box-shadow: 0 10px 25px rgba(60,64,67,0.15);
-            transform: translateY(-8px);
-            border-color: transparent;
-        }
-        .search-container:focus-within {
-            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2);
-            border-color: #4285F4;
-        }
+        .google-card:hover { box-shadow: 0 10px 25px rgba(60,64,67,0.15); transform: translateY(-8px); border-color: transparent; }
+        .search-container:focus-within { box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2); border-color: #4285F4; }
     </style>
 </head>
 <body class="antialiased min-h-screen">
@@ -130,17 +119,37 @@
             const list = type === 'top' ? topParticipants : generalParticipants;
             const cert = list.find(c => c.id === id);
 
-            const canvas = document.createElement('canvas');
-            canvas.width = 1600; canvas.height = 1200;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.textAlign = "center"; ctx.fillStyle = "#202124";
-            ctx.font = `bold 80px 'Poppins'`;
-            ctx.fillText(cert.name, 800, 600);
+            const templateImg = new Image();
+            templateImg.src = type === 'top' ? 'top-cert.png' : 'general-cert.png';
 
-            const dataUrl = canvas.toDataURL('image/png');
-            if (action === 'download') { const a = document.createElement('a'); a.href = dataUrl; a.download = `${cert.name}_Certificate.png`; a.click(); }
-            else { const win = window.open(); win.document.write(`<img src="${dataUrl}" style="width:100%"/>`); setTimeout(() => { win.print(); }, 500); }
+            templateImg.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = templateImg.width;
+                canvas.height = templateImg.height;
+                const ctx = canvas.getContext('2d');
+
+                // Draw template background
+                ctx.drawImage(templateImg, 0, 0);
+
+                // Text Styling
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#202124";
+                ctx.font = `bold ${Math.floor(canvas.width * 0.05)}px 'Poppins', sans-serif`;
+
+                // Dynamic position based on certificate type
+                const centerY = (type === 'top') ? canvas.height * 0.52 : canvas.height * 0.40;
+                ctx.fillText(cert.name, canvas.width / 2, centerY);
+
+                const dataUrl = canvas.toDataURL('image/png');
+                if (action === 'download') {
+                    const a = document.createElement('a'); a.href = dataUrl; a.download = `${cert.name}_Certificate.png`; a.click();
+                } else {
+                    const win = window.open(); win.document.write(`<img src="${dataUrl}" style="width:100%"/>`); setTimeout(() => { win.print(); }, 500);
+                }
+            };
+
+            templateImg.onerror = () => { alert("Certificate template image could not be loaded. Please ensure " + templateImg.src + " exists."); };
         };
     </script>
 </body>
