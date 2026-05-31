@@ -4,436 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GSAP Certificate Portal</title>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Poppins -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
                     colors: {
-                        google: {
-                            blue: '#4285F4',
-                            red: '#EA4335',
-                            yellow: '#FBBC05',
-                            green: '#34A853',
-                            gray: '#F8F9FA',
-                            text: '#202124'
-                        }
+                        'g-blue': '#4285F4',
+                        'g-red': '#EA4335',
+                        'g-yellow': '#FBBC05',
+                        'g-green': '#34A853',
+                        'g-gray': '#F8F9FA'
                     },
                     animation: {
-                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
                         fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                            '0%': { opacity: '0', transform: 'translateY(30px) scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
                         }
                     }
                 }
             }
         }
     </script>
-    
+
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #F8F9FA;
-            color: #202124;
+        body { font-family: 'Poppins', sans-serif; background-color: #F8F9FA; color: #202124; }
+        .google-card {
+            background: white;
+            border: 1px solid #DADCE0;
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .google-shadow {
-            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+        .google-card:hover {
+            box-shadow: 0 10px 25px rgba(60,64,67,0.15);
+            transform: translateY(-8px);
+            border-color: transparent;
         }
-        
-        .google-shadow-hover:hover {
-            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
-            transform: translateY(-2px);
+        .search-container:focus-within {
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2);
+            border-color: #4285F4;
         }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative">
+<body class="antialiased min-h-screen">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-4 right-4 z-[200] flex flex-col gap-2"></div>
-
-    <nav class="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center bg-google-blue text-white font-bold text-lg">
-                        G
-                    </div>
-                    <span class="font-medium text-lg tracking-tight text-gray-800">Student Ambassador Program</span>
-                </div>
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center bg-g-blue text-white font-bold text-sm">G</div>
+                <span class="font-medium text-gray-800">Ambassador Portal</span>
             </div>
         </div>
     </nav>
 
-    <main id="public-view" class="flex-grow">
-        
-        <!-- Hero Section -->
-        <header class="bg-white border-b border-gray-200 pb-16 pt-12 text-center">
-            <div class="max-w-4xl mx-auto px-4">
-                <div class="animate-fade-in-up">
-                    <div class="flex justify-center gap-2 mb-6">
-                        <span class="w-3 h-3 rounded-full bg-google-blue"></span>
-                        <span class="w-3 h-3 rounded-full bg-google-red"></span>
-                        <span class="w-3 h-3 rounded-full bg-google-yellow"></span>
-                        <span class="w-3 h-3 rounded-full bg-google-green"></span>
-                    </div>
-                    <h1 class="text-4xl md:text-5xl font-bold text-google-text tracking-tight mb-4">
-                        Participant Certificate Portal
-                    </h1>
-                    <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                        Thank you for participating in our recent events! Verify your name and download your official certificate below.
-                    </p>
-                    
-                    <!-- Search Bar -->
-                    <div class="relative max-w-xl mx-auto google-shadow rounded-full overflow-hidden bg-white flex items-center p-1 focus-within:ring-2 focus-within:ring-google-blue transition-all">
-                        <i class="ph ph-magnifying-glass text-gray-400 text-xl pl-4"></i>
-                        <input type="text" id="public-search" class="w-full px-4 py-3 outline-none text-gray-700 bg-transparent" placeholder="Search for your name...">
-                    </div>
+    <main class="py-16 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16">
+                <div class="flex justify-center gap-2 mb-6 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s">
+                    <div class="w-3 h-3 rounded-full bg-g-blue"></div>
+                    <div class="w-3 h-3 rounded-full bg-g-red"></div>
+                    <div class="w-3 h-3 rounded-full bg-g-yellow"></div>
+                    <div class="w-3 h-3 rounded-full bg-g-green"></div>
                 </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.2s">Certificate Center</h1>
             </div>
-        </header>
 
-        <!-- Top Participants Section -->
-        <section class="py-16 bg-google-gray">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-2xl font-bold text-google-text mb-2 flex items-center gap-2">
-                    <i class="ph-fill ph-star text-google-yellow"></i> Top Participants
+            <div class="search-container relative max-w-xl mx-auto mb-16 bg-white border border-gray-300 rounded-full flex items-center p-2 transition-all opacity-0 animate-fade-in-up" style="animation-delay: 0.3s">
+                <i class="ph ph-magnifying-glass text-gray-400 text-xl pl-4"></i>
+                <input type="text" id="public-search" class="w-full px-4 py-3 outline-none bg-transparent" placeholder="Search your name...">
+            </div>
+
+            <section class="mb-16">
+                <h2 class="text-xl font-bold mb-8 text-gray-800 flex items-center gap-2">
+                    <i class="ph-fill ph-star text-g-yellow"></i> Top Participants
                 </h2>
-                <p class="text-gray-600 mb-8">Special recognition for outstanding performance and engagement.</p>
-                
-                <div id="public-top-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
+                <div id="public-top-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
 
-        <!-- General Participants Section -->
-        <section class="py-16 bg-white border-t border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-google-text flex items-center gap-2">
-                            <i class="ph-fill ph-users text-google-blue"></i> Event Participants
-                        </h2>
-                        <p class="text-gray-600 mt-1">Certificates of successful participation.</p>
-                    </div>
-                </div>
-
-                <div id="public-gen-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
+            <section>
+                <h2 class="text-xl font-bold mb-8 text-gray-800 flex items-center gap-2">
+                    <i class="ph-fill ph-users text-g-blue"></i> Event Participants
+                </h2>
+                <div id="public-gen-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+            </section>
+        </div>
     </main>
 
-    <footer class="bg-white border-t border-gray-200 py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <div class="flex justify-center items-center gap-2 mb-4">
-                <span class="w-2 h-2 rounded-full bg-google-blue"></span>
-                <span class="w-2 h-2 rounded-full bg-google-red"></span>
-                <span class="w-2 h-2 rounded-full bg-google-yellow"></span>
-                <span class="w-2 h-2 rounded-full bg-google-green"></span>
-            </div>
-            <p class="text-sm text-gray-500">&copy; 2026 Google Student Ambassador Program.</p>
-        </div>
-    </footer>
-
     <script>
-        // =========================================================================
-        // 🎨 CUSTOM TEMPLATE SETUP
-        // If you have custom certificate images, put the file names inside the quotes below. 
-        // Example: "top-participant-bg.png"
-        // Leave it empty ("") to use the default Google design.
-        // =========================================================================
-        const TOP_CERTIFICATE_TEMPLATE_URL = "";     // Template for Top Participants
-        const GENERAL_CERTIFICATE_TEMPLATE_URL = ""; // Template for General Participants
+        const topParticipants = [{ id: 'T1', name: 'Bharath HM', track: 'Prompt creation', award: 'Top Prompt Creator' }, { id: 'T2', name: 'N suriya harsha', track: 'Prompt creation', award: 'Top Prompt Creator' }];
+        const generalParticipants = [{ id: 'G1', name: 'Kushal kambar', track: 'Prompt creation' }, { id: 'G2', name: 'Manoj', track: 'Prompt creation' }, { id: 'G3', name: 'Naresh MS', track: 'Prompt creation' }, { id: 'G4', name: 'Harshith', track: 'Prompt creation' }, { id: 'G5', name: 'Amodh', track: 'Prompt creation' }];
 
-        // =========================================================================
-        // ✏️ TYPE YOUR PARTICIPANTS HERE ✏️
-        // =========================================================================
-
-        const topParticipants = [
-            { id: 'T1', name: 'Bharath HM', track: 'Prompt creation', award: 'Outstanding Performance' },
-            { id: 'T2', name: 'N suriya harsha', track: 'Prompt creation', award: 'Outstanding Performance' }
-        ];
-
-        const generalParticipants = [
-            { id: 'G1', name: 'Kushal kambar', track: 'Prompt creation', role: 'Participant' },
-            { id: 'G2', name: 'Manoj', track: 'Prompt creation', role: 'Participant' },
-            { id: 'G3', name: 'Naresh MS', track: 'Prompt creation', role: 'Participant' },
-            { id: 'G4', name: 'Harshith', track: 'Prompt creation', role: 'Participant' },
-            { id: 'G5', name: 'Amodh', track: 'Prompt creation', role: 'Participant' }
-        ];
-
-        // =========================================================================
-        // End of Participant Data
-        // =========================================================================
-
-        // --- UI RENDERING ---
-        function renderPublicTop() {
-            const container = document.getElementById('public-top-container');
+        function render() {
             const search = document.getElementById('public-search').value.toLowerCase();
-            
-            const filtered = topParticipants.filter(p => p.name.toLowerCase().includes(search));
-            
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500">No top participants found matching your search.</div>`;
-                return;
-            }
-
-            container.innerHTML = filtered.map(cert => `
-                <div class="bg-white rounded-2xl overflow-hidden google-shadow-hover transition-all relative flex flex-col h-full border border-gray-100">
-                    <div class="h-2 w-full bg-google-blue"></div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                            <i class="ph-fill ph-medal text-2xl text-google-blue"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-1">${cert.name}</h3>
-                        <p class="text-sm font-medium text-google-blue bg-blue-50 px-3 py-1 rounded-full w-max mb-4">${cert.award}</p>
-                        <div class="mt-auto pt-4 border-t border-gray-100">
-                            <p class="text-sm text-gray-500 mb-3"><span class="font-medium text-gray-700">Event:</span> ${cert.track}</p>
-                            <div class="flex gap-2">
-                                <button onclick="window.handleCert('${cert.id}', 'top', 'download')" class="flex-1 py-2.5 bg-gray-50 hover:bg-gray-100 text-google-blue font-medium rounded-lg border border-gray-200 transition-colors flex justify-center items-center gap-2">
-                                    <i class="ph-bold ph-download-simple"></i> Save
-                                </button>
-                                <button onclick="window.handleCert('${cert.id}', 'top', 'print')" class="flex-1 py-2.5 bg-google-blue hover:bg-blue-600 text-white font-medium rounded-lg border border-transparent transition-colors flex justify-center items-center gap-2">
-                                    <i class="ph-bold ph-printer"></i> Print
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            document.getElementById('public-top-container').innerHTML = topParticipants.filter(p => p.name.toLowerCase().includes(search)).map((p, i) => participantCard(p, 'top', i)).join('');
+            document.getElementById('public-gen-container').innerHTML = generalParticipants.filter(p => p.name.toLowerCase().includes(search)).map((p, i) => participantCard(p, 'general', i)).join('');
         }
 
-        function renderPublicGen() {
-            const container = document.getElementById('public-gen-container');
-            const search = document.getElementById('public-search').value.toLowerCase();
-            
-            const filtered = generalParticipants.filter(p => p.name.toLowerCase().includes(search));
-            
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500">No participants found matching your search.</div>`;
-                return;
-            }
-
-            container.innerHTML = filtered.map(cert => `
-                <div class="bg-white rounded-xl border border-gray-200 p-5 hover:border-google-blue hover:shadow-md transition-all flex flex-col h-full group">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="w-10 h-10 bg-gray-50 group-hover:bg-blue-50 rounded-lg flex items-center justify-center transition-colors">
-                            <i class="ph-fill ph-certificate text-xl text-gray-400 group-hover:text-google-blue transition-colors"></i>
-                        </div>
-                        <span class="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]" title="${cert.track}">${cert.track}</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-1 line-clamp-1">${cert.name}</h3>
-                    <p class="text-sm text-gray-500 mb-4">${cert.role || 'Participant'}</p>
-                    
-                    <div class="mt-auto flex gap-2 w-full">
-                        <button onclick="window.handleCert('${cert.id}', 'general', 'download')" class="flex-1 py-2 border-2 border-transparent hover:border-google-blue bg-gray-50 hover:bg-white text-gray-700 hover:text-google-blue font-medium rounded-lg transition-colors flex justify-center items-center gap-2" title="Download">
-                            <i class="ph ph-download-simple"></i> Save
-                        </button>
-                        <button onclick="window.handleCert('${cert.id}', 'general', 'print')" class="flex-1 py-2 border-2 border-transparent bg-google-blue hover:bg-blue-600 text-white font-medium rounded-lg transition-colors flex justify-center items-center gap-2" title="Print">
-                            <i class="ph ph-printer"></i> Print
-                        </button>
+        function participantCard(p, type, index) {
+            return `
+                <div class="google-card p-6 opacity-0 animate-fade-in-up" style="animation-delay: ${0.4 + (index * 0.1)}s">
+                    <h3 class="font-bold text-gray-900">${p.name}</h3>
+                    <p class="text-[10px] font-bold text-g-blue uppercase tracking-widest mb-6">${type === 'top' ? p.award : p.track}</p>
+                    <div class="flex gap-2">
+                        <button onclick="handleCert('${p.id}', '${type}', 'download')" class="flex-1 py-2 bg-g-gray hover:bg-gray-200 rounded-lg text-xs font-bold transition-all active:scale-95">Save</button>
+                        <button onclick="handleCert('${p.id}', '${type}', 'print')" class="flex-1 py-2 bg-g-blue hover:bg-blue-600 text-white rounded-lg text-xs font-bold shadow-lg shadow-blue-200 transition-all active:scale-95">Print</button>
                     </div>
                 </div>
-            `).join('');
-        }
-
-        document.getElementById('public-search').addEventListener('input', () => {
-            renderPublicTop();
-            renderPublicGen();
-        });
-
-        // --- DOWNLOAD & PRINT LOGIC ---
-        window.handleCert = (id, type, action) => {
-            const dataList = type === 'top' ? topParticipants : generalParticipants;
-            const cert = dataList.find(c => c.id === id);
-            
-            if (!cert) return;
-
-            showToast(action === 'print' ? "Preparing to print..." : "Generating certificate...", "info");
-            
-            const finishAction = (dataUrl) => {
-                if (action === 'download') {
-                    const a = document.createElement('a');
-                    a.href = dataUrl;
-                    a.download = `GSAP_Certificate_${cert.name.replace(/\s+/g, '_')}.png`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    showToast("Download completed!", "success");
-                } else if (action === 'print') {
-                    const printWindow = window.open('', '_blank');
-                    printWindow.document.write(`
-                        <html>
-                            <head><title>Print Certificate - ${cert.name}</title></head>
-                            <body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#202124;">
-                                <img src="${dataUrl}" style="max-width:100%; max-height:100vh; box-shadow: 0 0 20px rgba(0,0,0,0.5);" onload="setTimeout(() => { window.print(); window.close(); }, 500);" />
-                            </body>
-                        </html>
-                    `);
-                    printWindow.document.close();
-                }
-            };
-
-            // Determine which template to use based on the section (Top vs General)
-            let activeTemplateUrl = "";
-            if (type === 'top' && TOP_CERTIFICATE_TEMPLATE_URL !== "") {
-                activeTemplateUrl = TOP_CERTIFICATE_TEMPLATE_URL;
-            } else if (type === 'general' && GENERAL_CERTIFICATE_TEMPLATE_URL !== "") {
-                activeTemplateUrl = GENERAL_CERTIFICATE_TEMPLATE_URL;
-            }
-
-            if (activeTemplateUrl !== "") {
-                // Draw custom uploaded template and write name
-                const img = new Image();
-                img.crossOrigin = "Anonymous"; // Allows loading from external URLs if needed
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    
-                    // Draw the template background
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    // Center alignment for text
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    ctx.fillStyle = "#202124"; // TEXT COLOR: Change this hex code to alter name color
-                    
-                    // Auto-scale font size based on template width
-                    const fontSize = Math.floor(canvas.width * 0.05); 
-                    ctx.font = `bold ${fontSize}px 'Poppins', sans-serif`;
-                    
-                    // Write Name in the center of the image
-                    const centerX = canvas.width / 2;
-                    // Position adjustment: Change "canvas.height / 2" to move text up or down
-                    const centerY = canvas.height / 2; 
-                    
-                    ctx.fillText(cert.name, centerX, centerY);
-                    
-                    finishAction(canvas.toDataURL('image/png'));
-                };
-                img.onerror = () => {
-                    showToast("Error loading custom template image. Please check the file name.", "error");
-                };
-                img.src = activeTemplateUrl;
-
-            } else {
-                // Generate default beautiful Google certificate automatically
-                const canvas = document.createElement('canvas');
-                canvas.width = 1600;
-                canvas.height = 1200;
-                const ctx = canvas.getContext('2d');
-
-                // White Background
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Google Colors Border Accents
-                ctx.fillStyle = "#4285F4"; ctx.fillRect(0, 0, canvas.width, 25);
-                ctx.fillStyle = "#EA4335"; ctx.fillRect(0, 25, canvas.width, 25);
-                ctx.fillStyle = "#FBBC05"; ctx.fillRect(0, 50, canvas.width, 25);
-                ctx.fillStyle = "#34A853"; ctx.fillRect(0, 75, canvas.width, 25);
-                
-                // Bottom Border
-                ctx.fillStyle = "#34A853"; ctx.fillRect(0, canvas.height - 25, canvas.width, 25);
-                ctx.fillStyle = "#FBBC05"; ctx.fillRect(0, canvas.height - 50, canvas.width, 25);
-
-                // Center alignment for all text
-                ctx.textAlign = "center";
-                const centerX = canvas.width / 2;
-
-                // Program Title
-                ctx.fillStyle = "#5f6368";
-                ctx.font = "40px 'Poppins', sans-serif";
-                ctx.fillText("Google Student Ambassador Program", centerX, 280);
-
-                // Main Header
-                ctx.fillStyle = "#202124";
-                ctx.font = "bold 85px 'Poppins', sans-serif";
-                ctx.fillText("Certificate of Participation", centerX, 400);
-
-                // Subtitle
-                ctx.fillStyle = "#5f6368";
-                ctx.font = "italic 45px 'Poppins', sans-serif";
-                ctx.fillText("This is proudly presented to", centerX, 550);
-
-                // Participant Name
-                ctx.fillStyle = "#4285F4";
-                ctx.font = "bold 110px 'Poppins', sans-serif";
-                ctx.fillText(cert.name, centerX, 720);
-
-                // Event description
-                ctx.fillStyle = "#202124";
-                ctx.font = "45px 'Poppins', sans-serif";
-                ctx.fillText(`For outstanding participation in`, centerX, 880);
-                
-                // Event Name
-                ctx.fillStyle = "#34A853";
-                ctx.font = "bold 55px 'Poppins', sans-serif";
-                ctx.fillText(cert.track, centerX, 970);
-
-                // Add Award text if it's a Top Participant
-                if (cert.award) {
-                    ctx.fillStyle = "#EA4335";
-                    ctx.font = "bold 40px 'Poppins', sans-serif";
-                    ctx.fillText(`Awarded: ${cert.award}`, centerX, 1070);
-                }
-
-                finishAction(canvas.toDataURL('image/png'));
-            }
-        };
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const bg = type === 'error' ? 'bg-google-red' : (type === 'success' ? 'bg-google-green' : 'bg-gray-800');
-            
-            toast.className = `${bg} text-white px-4 py-3 rounded-md shadow-lg flex items-center gap-3 transform translate-y-10 opacity-0 transition-all duration-300`;
-            toast.innerHTML = `
-                <i class="ph-fill ${type === 'success' ? 'ph-check-circle' : 'ph-info'} text-xl"></i>
-                <span class="font-medium text-sm">${message}</span>
             `;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove('translate-y-10', 'opacity-0');
-            }, 10);
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
         }
 
-        // Initialize the page on load
-        window.onload = () => {
-            renderPublicTop();
-            renderPublicGen();
-        };
+        document.getElementById('public-search').addEventListener('input', render);
+        render();
 
+        window.handleCert = (id, type, action) => {
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.5 }, colors: ['#4285F4', '#EA4335', '#FBBC05', '#34A853'] });
+
+            const list = type === 'top' ? topParticipants : generalParticipants;
+            const cert = list.find(c => c.id === id);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 1600; canvas.height = 1200;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.textAlign = "center"; ctx.fillStyle = "#202124";
+            ctx.font = `bold 80px 'Poppins'`;
+            ctx.fillText(cert.name, 800, 600);
+
+            const dataUrl = canvas.toDataURL('image/png');
+            if (action === 'download') { const a = document.createElement('a'); a.href = dataUrl; a.download = `${cert.name}_Certificate.png`; a.click(); }
+            else { const win = window.open(); win.document.write(`<img src="${dataUrl}" style="width:100%"/>`); setTimeout(() => { win.print(); }, 500); }
+        };
     </script>
 </body>
 </html>
